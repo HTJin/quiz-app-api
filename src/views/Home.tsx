@@ -3,7 +3,7 @@ import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import PostType from "../types/post";
 import UserType from "../types/auth";
-import { getAllPosts } from "../lib/apiWrapper";
+import { getAllPosts, createPost } from "../lib/apiWrapper";
 
 type HomeProps = {
   user: UserType | null;
@@ -12,11 +12,7 @@ type HomeProps = {
 
 export default function Home({ user }: HomeProps) {
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [newPost, setNewPost] = useState<PostType>({
-    id: 1,
-    title: "",
-    body: "",
-  });
+  const [newPost, setNewPost] = useState<PostType>({ title: "", body: "" });
   const [displayForm, setDisplayForm] = useState(false);
 
   useEffect(() => {
@@ -29,17 +25,25 @@ export default function Home({ user }: HomeProps) {
     fetchData();
   }, []);
 
-  const handleFormSubmit = (e: FormEvent): void => {
+  const handleFormSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
 
-    const newPostWithAuthor = { ...newPost, author: user! };
-    setPosts([...posts, newPostWithAuthor]);
-    setNewPost({ id: posts.length + 2, title: "", body: "" });
-    setDisplayForm(false);
+    const token = localStorage.getItem("token");
+    const response = await createPost(newPost, token!);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      const response = await getAllPosts();
+      if (response.data) {
+        setPosts(response.data);
+      }
+      setNewPost({ title: "", body: "" });
+      setDisplayForm(false);
+      console.log(newPost.title + " has been created");
+    }
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.name, e.target.value);
     setNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
