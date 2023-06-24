@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import UserType from "../types/auth";
 import { register } from "../lib/apiWrapper";
 
-export default function Register() {
+type RegisterProps = {
+  logUserIn: (user: UserType) => void;
+};
+
+export default function Register({ logUserIn }: RegisterProps) {
   const [newUser, setNewUser] = useState<UserType>({
     firstName: "",
     lastName: "",
@@ -27,6 +31,7 @@ export default function Register() {
       console.log(response.error);
     } else {
       console.log(response.data?.username + " has been created");
+      logUserIn(response.data!);
       navigate("/");
     }
   };

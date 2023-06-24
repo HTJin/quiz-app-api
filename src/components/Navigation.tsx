@@ -35,7 +35,7 @@ export default function Navigation({
               <Link to="/login">Log In</Link>
             </li>
             <li>
-              <a href="">Sign Up</a>
+              <Link to="/register">Sign Up</Link>
             </li>
           </>
         )}

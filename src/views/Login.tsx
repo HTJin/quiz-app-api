@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import UserType from "../types/auth";
+import { login } from "../lib/apiWrapper";
 
 type LoginProps = {
   logUserIn: (user: UserType) => void;
@@ -17,27 +18,54 @@ export default function Login({ logUserIn }: LoginProps) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleFormSubmit = async (
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
-    const firstNames = ["Bob", "Rob", "Adam", "Sally", "Julie"];
-    const lastNames = ["Smith", "Robert", "Johnson", "Jackson", "Lee"];
-    const randomFirstName =
-      firstNames[Math.floor(Math.random() * firstNames.length)];
-    const randomLastName =
-      lastNames[Math.floor(Math.random() * lastNames.length)];
-    const randomEmail =
-      randomFirstName[0].toLowerCase() +
-      randomLastName.toLowerCase() +
-      "@codingtemple.lol";
+    const response = await login(user.username, user.password!);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      localStorage.setItem("token", response.data?.token as string);
+      localStorage.setItem(
+        "tokenExp",
+        response.data?.token_expiration as string
+      );
+      const firstNames = [
+        "Kyle",
+        "Megan",
+        "Ally",
+        "Jack",
+        "Juan",
+        "Jeremy",
+        "Anna",
+      ];
+      const lastNames = [
+        "Stuart",
+        "Rojas",
+        "Williams",
+        "Smith",
+        "Johnson",
+        "McMulligan",
+      ];
+      const randomFirstName =
+        firstNames[Math.floor(Math.random() * firstNames.length)];
+      const randomLastName =
+        lastNames[Math.floor(Math.random() * lastNames.length)];
+      const randomEmail =
+        randomFirstName[0].toLowerCase() +
+        randomLastName.toLowerCase() +
+        "@kekambas.org";
 
-    logUserIn({
-      ...user,
-      firstName: randomFirstName,
-      lastName: randomLastName,
-      email: randomEmail,
-    });
-    navigate("/");
+      logUserIn({
+        ...user,
+        firstName: randomFirstName,
+        lastName: randomLastName,
+        email: randomEmail,
+      });
+      navigate("/");
+    }
   };
 
   return (

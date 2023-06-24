@@ -27,7 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home user={loggedInUser} />} />
           <Route path="/login" element={<Login logUserIn={logUserIn} />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register logUserIn={logUserIn} />} />
         </Routes>
       </div>
     </div>
