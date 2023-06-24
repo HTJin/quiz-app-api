@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import UserType from "../types/auth";
-import { login } from "../lib/apiWrapper";
+import { login, getMe } from "../lib/apiWrapper";
 
 type LoginProps = {
   logUserIn: (user: UserType) => void;
@@ -32,39 +32,14 @@ export default function Login({ logUserIn }: LoginProps) {
         "tokenExp",
         response.data?.token_expiration as string
       );
-      const firstNames = [
-        "Kyle",
-        "Megan",
-        "Ally",
-        "Jack",
-        "Juan",
-        "Jeremy",
-        "Anna",
-      ];
-      const lastNames = [
-        "Stuart",
-        "Rojas",
-        "Williams",
-        "Smith",
-        "Johnson",
-        "McMulligan",
-      ];
-      const randomFirstName =
-        firstNames[Math.floor(Math.random() * firstNames.length)];
-      const randomLastName =
-        lastNames[Math.floor(Math.random() * lastNames.length)];
-      const randomEmail =
-        randomFirstName[0].toLowerCase() +
-        randomLastName.toLowerCase() +
-        "@kekambas.org";
-
-      logUserIn({
-        ...user,
-        firstName: randomFirstName,
-        lastName: randomLastName,
-        email: randomEmail,
-      });
-      navigate("/");
+      const token = localStorage.getItem("token");
+      const userResponse = await getMe(token as string);
+      if (userResponse.error) {
+        console.log(userResponse.error);
+      } else {
+        logUserIn(userResponse.data!);
+        navigate("/");
+      }
     }
   };
 
