@@ -1,8 +1,9 @@
-import { useState, MouseEvent, FormEvent, ChangeEvent } from "react";
+import { useState, useEffect, MouseEvent, FormEvent, ChangeEvent } from "react";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import PostType from "../types/post";
 import UserType from "../types/auth";
+import { getAllPosts } from "../lib/apiWrapper";
 
 type HomeProps = {
   user: UserType | null;
@@ -18,10 +19,20 @@ export default function Home({ user }: HomeProps) {
   });
   const [displayForm, setDisplayForm] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getAllPosts();
+      if (response.data) {
+        setPosts(response.data);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleFormSubmit = (e: FormEvent): void => {
     e.preventDefault();
 
-    const newPostWithAuthor = { ...newPost, author: user! }
+    const newPostWithAuthor = { ...newPost, author: user! };
     setPosts([...posts, newPostWithAuthor]);
     setNewPost({ id: posts.length + 2, title: "", body: "" });
     setDisplayForm(false);

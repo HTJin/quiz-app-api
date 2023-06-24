@@ -48,15 +48,15 @@ export default function Login({ logUserIn }: LoginProps) {
         <input
           type="text"
           name="username"
-          value={user.username}
           onChange={handleInputChange}
+          value={user.username}
         />
         <label>Password</label>
         <input
           type="password"
           name="password"
-          value={user.password}
           onChange={handleInputChange}
+          value={user.password}
         />
         <button type="submit">Log In</button>
       </form>

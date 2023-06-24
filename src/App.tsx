@@ -4,6 +4,7 @@ import Navigation from "./components/Navigation";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import UserType from "./types/auth";
+import Register from "./views/Register";
 
 export default function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -26,6 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home user={loggedInUser} />} />
           <Route path="/login" element={<Login logUserIn={logUserIn} />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </div>

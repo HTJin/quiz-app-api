@@ -5,6 +5,8 @@ type PostType = {
   title: string;
   body: string;
   author?: UserType;
+  dataCreated?: string;
+  imageURL?: string;
 };
 
 export default PostType;
