@@ -2,13 +2,14 @@ import { useState, MouseEvent, FormEvent, ChangeEvent } from "react";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import PostType from "../types/post";
+import UserType from "../types/auth";
 
 type HomeProps = {
-  name: string;
+  user: UserType | null;
   handleClick?: (e: MouseEvent) => void;
 };
 
-export default function Home({ name }: HomeProps) {
+export default function Home({ user }: HomeProps) {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [newPost, setNewPost] = useState<PostType>({
     id: 1,
@@ -32,13 +33,17 @@ export default function Home({ name }: HomeProps) {
 
   return (
     <>
-      <h1>Hello {name.toUpperCase()}</h1>
-      <button
-        onClick={() => {
-          setDisplayForm(!displayForm);
-        }}>
-        {displayForm ? "Close X" : "Compose +"}
-      </button>
+      <h1>
+        Hello {user?.firstName} {user?.lastName}
+      </h1>
+      {user && (
+        <button
+          onClick={() => {
+            setDisplayForm(!displayForm);
+          }}>
+          {displayForm ? "Close X" : "Compose +"}
+        </button>
+      )}
       {displayForm && (
         <PostForm
           handleSubmit={handleFormSubmit}
@@ -47,7 +52,7 @@ export default function Home({ name }: HomeProps) {
         />
       )}
       {posts.map((p) => (
-        <PostCard post={p} />
+        <PostCard key={p.id} post={p} />
       ))}
       <button
         onClick={() => {
