@@ -1,45 +1,60 @@
 import { useState, MouseEvent, FormEvent, ChangeEvent } from "react";
+import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
-
-type Post = {
-  id: number;
-  title: string;
-};
+import PostType from "../types/post";
 
 type HomeProps = {
   name: string;
-  handleClick: (e: MouseEvent) => void;
+  handleClick?: (e: MouseEvent) => void;
 };
 
-export default function Home({ name, handleClick }: HomeProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [newPost, setNewPost] = useState<Post>({ id: 1, title: "" });
+export default function Home({ name }: HomeProps) {
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [newPost, setNewPost] = useState<PostType>({
+    id: 1,
+    title: "",
+    body: "",
+  });
+  const [displayForm, setDisplayForm] = useState(false);
 
   const handleFormSubmit = (e: FormEvent): void => {
     e.preventDefault();
 
     setPosts([...posts, newPost]);
-    setNewPost({ id: posts.length + 2, title: "" });
+    setNewPost({ id: posts.length + 2, title: "", body: "" });
+    setDisplayForm(false);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     console.log(e.target.name, e.target.value);
-    setNewPost({ ...newPost, title: e.target.value });
+    setNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
   return (
     <>
       <h1>Hello {name.toUpperCase()}</h1>
-      <button onClick={handleClick}>Log Out</button>
-      <PostForm
-        handleSubmit={handleFormSubmit}
-        newPost={newPost}
-        handleChange={handleInputChange}
-      />
+      <button
+        onClick={() => {
+          setDisplayForm(!displayForm);
+        }}>
+        {displayForm ? "Close X" : "Compose +"}
+      </button>
+      {displayForm && (
+        <PostForm
+          handleSubmit={handleFormSubmit}
+          newPost={newPost}
+          handleChange={handleInputChange}
+        />
+      )}
       {posts.map((p) => (
-        <li key={p.id}>{p.title}</li>
+        <PostCard post={p} />
       ))}
-      <button onClick={() => {setPosts([])}}>Clear All Posts</button>
+      <button
+        onClick={() => {
+          setPosts([]);
+        }}>
+        Clear All Posts
+      </button>
     </>
   );
 }

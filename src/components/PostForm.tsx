@@ -1,14 +1,10 @@
 import { FormEvent, ChangeEvent } from "react";
-
-type Post = {
-  id: number;
-  title: string;
-};
+import PostType from "../types/post";
 
 type PostFormProps = {
   handleSubmit: (e: FormEvent) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  newPost: Post;
+  newPost: PostType;
 };
 
 export default function PostForm({
@@ -24,6 +20,13 @@ export default function PostForm({
         name="title"
         onChange={handleChange}
         value={newPost.title}
+      />
+      <label>Body</label>
+      <input
+        type="text"
+        name="body"
+        onChange={handleChange}
+        value={newPost.body}
       />
       <button type="submit">Create Post</button>
     </form>

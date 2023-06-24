@@ -1,7 +1,6 @@
 import { useState, MouseEvent } from "react";
 import Navigation from "./components/Navigation";
 import Home from "./views/Home";
-import LoggedOut from "./views/LoggedOut";
 
 export default function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -16,11 +15,7 @@ export default function App() {
     <div>
       <Navigation isLoggedIn={isLoggedIn} />
       <div>
-        {isLoggedIn ? (
-          <Home name={name} handleClick={handleClick} />
-        ) : (
-          <LoggedOut handleClick={handleClick} />
-        )}
+        <Home name={name} />
       </div>
     </div>
   );
