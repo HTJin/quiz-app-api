@@ -14,6 +14,7 @@ export default function Home({ user }: HomeProps) {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [newPost, setNewPost] = useState<PostType>({ title: "", body: "" });
   const [displayForm, setDisplayForm] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +24,7 @@ export default function Home({ user }: HomeProps) {
       }
     };
     fetchData();
-  }, []);
+  }, [update]);
 
   const handleFormSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
@@ -37,6 +38,7 @@ export default function Home({ user }: HomeProps) {
       if (response.data) {
         setPosts(response.data);
       }
+      setUpdate(!update);
       setNewPost({ title: "", body: "" });
       setDisplayForm(false);
       console.log(newPost.title + " has been created");
@@ -68,7 +70,13 @@ export default function Home({ user }: HomeProps) {
         />
       )}
       {posts.map((p) => (
-        <PostCard key={p.id} post={p} />
+        <PostCard
+          key={p.id}
+          post={p}
+          user={user}
+          setUpdate={setUpdate}
+          update={update}
+        />
       ))}
       <button
         onClick={() => {

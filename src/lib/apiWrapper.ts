@@ -150,4 +150,27 @@ async function createPost(
   };
 }
 
-export { getAllPosts, register, login, getMe, createPost };
+async function deletePost(
+  postId: number,
+  token: string
+): Promise<APIResponse<string>> {
+  let error;
+  let data;
+  try {
+    const response: AxiosResponse<{ success: string }> =
+      await apiClientTokenAuth(token).delete(postEndpoint + "/" + postId);
+    data = response.data.success;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      error = err.response?.data.error;
+    } else {
+      error = "Something went wrong";
+    }
+  }
+  return {
+    error,
+    data,
+  };
+}
+
+export { getAllPosts, register, login, getMe, createPost, deletePost };
