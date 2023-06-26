@@ -11,7 +11,6 @@ export default function Register({ logUserIn }: RegisterProps) {
   const [newUser, setNewUser] = useState<UserType>({
     firstName: "",
     lastName: "",
-    username: "",
     email: "",
     password: "",
   });
@@ -27,11 +26,12 @@ export default function Register({ logUserIn }: RegisterProps) {
     e.preventDefault();
 
     const response = await register(newUser);
+
     if (response.error) {
       console.log(response.error);
-    } else {
-      console.log(response.data?.username + " has been created");
-      logUserIn(response.data!);
+    } else if (response.data) {
+      console.log(response.data.email + " has been created");
+      logUserIn(response.data);
       navigate("/");
     }
   };
@@ -54,13 +54,6 @@ export default function Register({ logUserIn }: RegisterProps) {
             name="lastName"
             onChange={handleInputChange}
             value={newUser.lastName}
-          />
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            onChange={handleInputChange}
-            value={newUser.username}
           />
           <label>Email</label>
           <input
