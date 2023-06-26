@@ -38,7 +38,7 @@ export default function Register({ logUserIn }: RegisterProps) {
 
   return (
     <>
-      <h1>Register for Kekambas Blog</h1>
+      <h1>Register for Kekambas Quiz App</h1>
       <div>
         <form onSubmit={handleFormSubmit}>
           <label>First Name</label>

@@ -32,7 +32,7 @@ export default function Login({ logUserIn }: LoginProps) {
         "tokenExp",
         response.data?.token_expiration as string
       );
-      const { password, ...userData } = response.data;
+      const { ...userData } = response.data;
       logUserIn(userData);
       navigate("/");
     }

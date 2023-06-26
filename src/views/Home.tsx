@@ -3,6 +3,7 @@ import QuestionCard from "../components/QuestionCard";
 import QuestionType from "../types/question";
 import UserType from "../types/auth";
 import { getAllQuestions, createQuestion } from "../lib/apiWrapper";
+import QuestionForm from "../components/QuestionForm";
 
 type HomeProps = {
   user: UserType | null;
@@ -10,8 +11,12 @@ type HomeProps = {
 
 export default function Home({ user }: HomeProps) {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
-  // const [displayForm, setDisplayForm] = useState(false);
+  const [displayForm, setDisplayForm] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [newQuestion, setNewQuestion] = useState<QuestionType>({
+    question: "",
+    answer: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,42 +28,49 @@ export default function Home({ user }: HomeProps) {
     fetchData();
   }, [update]);
 
-  // const handleFormSubmit = async (e: FormEvent): Promise<void> => {
-  //   e.preventDefault();
+  const handleFormSubmit = async (e: FormEvent): Promise<void> => {
+    e.preventDefault();
 
-  //   const token = localStorage.getItem("token");
-  //   const response = await createQuestion(newQuestion, token!);
-  //   if (response.error) {
-  //     console.log(response.error);
-  //   } else {
-  //     const response = await getAllQuestions();
-  //     if (response.data) {
-  //       setQuestions(response.data);
-  //     }
-  //     setUpdate(!update);
-  //     setNewQuestion({ title: "", body: "" });
-  //     setDisplayForm(false);
-  //     console.log(newQuestion.title + " has been created");
-  //   }
-  // };
+    const token = localStorage.getItem("token");
+    const response = await createQuestion(newQuestion, token!);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      const response = await getAllQuestions();
+      if (response.data) {
+        setQuestions(response.data);
+      }
+      setUpdate(!update);
+      setNewQuestion({ question: "", answer: "" });
+      setDisplayForm(false);
+      console.log(newQuestion.question + " has been created");
+    }
+  };
 
-  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-  //   setNewQuestion({ ...newQuestion, [e.target.name]: e.target.value });
-  // };
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setNewQuestion({ ...newQuestion, [e.target.name]: e.target.value });
+  };
 
   return (
     <>
       <h1>
         Hello {user?.firstName} {user?.lastName}
       </h1>
-      {/* {user && (
+      {user && (
         <button
           onClick={() => {
             setDisplayForm(!displayForm);
           }}>
           {displayForm ? "Close X" : "Compose +"}
         </button>
-      )} */}
+      )}
+      {displayForm && (
+        <QuestionForm
+          handleSubmit={handleFormSubmit}
+          handleChange={handleInputChange}
+          newQuestion={newQuestion}
+        />
+      )}
       {Array.isArray(questions) &&
         questions.map((question) => (
           <QuestionCard

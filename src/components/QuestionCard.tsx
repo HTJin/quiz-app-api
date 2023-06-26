@@ -34,7 +34,7 @@ export default function QuestionCard({
         <div>
           By {question.author?.firstName} {question.author?.lastName}
         </div>
-        <div>Date Created: {question.created_on}</div>
+        <div>Date Created: {new Date(question.created_on!).toString()}</div>
       </div>
 
       {question.author ===
